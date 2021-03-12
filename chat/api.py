@@ -1,12 +1,4 @@
-from fcm_django.api.rest_framework import FCMDeviceSerializer
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from chat.models import Message, Thread, ConnectionHistory
-from chat.serializer import Thread_Serializer, Message_Serializer, UserChatSerializer, ConnectionHistorySerializer
-from django.shortcuts import Http404
-from authentication.models import User
-from fcm_django.models import FCMDevice
-from rest_framework import status
+from django.Response import Response
 
 class Chatview(APIView):
     paginate_by = 25
