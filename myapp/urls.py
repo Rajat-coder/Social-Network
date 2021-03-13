@@ -5,7 +5,7 @@ from myproject import settings
 
 urlpatterns = [
         path('', views.homepage, name="homepage"),
-        path('signuppage/', views.signuppage.as_view(), name="signup"),
-        path('loginpage/', views.loginpage, name="loginpage"),
+        path('signup/page/', views.signuppage.as_view(), name="signup"),
+        path('login/page/', views.loginpage, name="loginpage"),
 
 ]
