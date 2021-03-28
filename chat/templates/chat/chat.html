@@ -1,42 +1,48 @@
 {% extends 'chat/base.html' %}
 
 {% block content %}
-    <h3>You: {{me.username}}</h3>
-    <h3>Thread: {{user.username}}</h3>
-    <ul>
+    <h3>Sender Name: {{me.username}}</h3>
+    <h3>Receiver Name: {{user.username}}</h3>
+    <ul id= "message-list">
         {% for message in messages %}
         <li>[{{message.sender.username}}]: {{message.text}}</li>
         {% endfor %}
     </ul>
-    <form action="" method="post">
+    <form id="message-form">
         {% csrf_token %}
         <input type="text" name="message" id="message" required>
         <input type="submit" value="Send" class="btn">
     </form>
 {% endblock content %}
-
 {% block custom_javascript %}
-
 <script>
-    const url = 'ws://localhost:127.0.0.1:8000/ws/chat/'
+    const url = 'ws://127.0.0.1:8000/ws' + window.location.pathname;
     const ws = new WebSocket(url)
-    ws.onopen = function(event)
-    {
-        console.log("Connection is opened")
+    ws.onopen = function(event){
+        console.log('connection is open')
     }
-    ws.onmessage = function(event)
-    {   
-        console.log(event)
-        console.log("Connection is received")
+    ws.onclose = function(event){
+        console.log('connection is close')
     }
-    ws.onclose = function(event)
-    {
-        console.log("Connection is closed")
+
+    ws.onmessage = function(event){
+        console.log('connection has message', event.data)
+        const ul = document.getElementById('message-list')
+        var li = document.createElement('li');
+        data = JSON.parse(event.data);
+
+        li.append(document.createTextNode(
+            '[' + data.username + ']:' + data.text
+        ))
+        ul.append(li);
     }
-    ws.onerror = function(event)
-    {
-        console.log("Something went wrong")
+    var messageForm = document.getElementById('message-form')
+    messageForm.addEventListener('submit', sendmessage)
+    function sendmessage (e){
+        if(e.preventDefault) e.preventDefault();
+        ws.send(document.getElementById('message').value);
+        messageForm.reset();
+        return false
     }
 </script>
-
 {% endblock custom_javascript %}
