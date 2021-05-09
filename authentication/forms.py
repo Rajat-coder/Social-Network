@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 from authentication.models import User
+from django.contrib.auth import authenticate
 
 class SignUpForm(forms.ModelForm):
     first_name = forms.CharField(label="First Name", max_length=100)
@@ -30,4 +31,18 @@ class SignUpForm(forms.ModelForm):
             userobj.save()
         return userobj
 
+class LoginForm(forms.Form):
+    username = forms.CharField(label="Username")
+    password = forms.CharField(label='Password', widget=forms.PasswordInput)
+
+    def clean(self, *args, **kwargs):
+        user1 = self.cleaned_data.get("username")
+        pass1 = self.cleaned_data.get("password")
+
+        user_obj = authenticate(username=user1, password=pass1)
+
+        if not user_obj:
+            raise forms.ValidationError("Wrong username / password ")
+
+        return super(LoginForm, self).clean(*args, **kwargs)
 
