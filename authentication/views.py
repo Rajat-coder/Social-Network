@@ -8,7 +8,10 @@ from authentication.models import User
 from django.contrib.auth import login, logout
 # Create your views here.
 
-def index(request):
+def StartPage(request):
+    return render(request,"start.html")
+
+def Index(request):
     return render(request, "index.html")
 
 class SignUpView(SuccessMessageMixin,CreateView):
